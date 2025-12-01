@@ -13,7 +13,6 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // If already logged in, redirect to app root and replace history
   useEffect(() => {
     if (user) {
       router.replace('/');
@@ -31,9 +30,9 @@ export default function SignupPage() {
 
     setLoading(true);
     try {
+      // same API call as before — no change here
       await API.post('/auth/signup', form);
 
-      // user should be allowed to go back to signup → so use push()
       router.push(`/signup/verify?email=${encodeURIComponent(form.email)}`);
     } catch (err: unknown) {
       setError(getErrorMessage(err));
@@ -42,50 +41,83 @@ export default function SignupPage() {
     }
   };
 
-  // While redirecting away show nothing (avoids flash)
   if (user) return null;
 
   return (
-    <div className="p-10 max-w-md mx-auto">
-      <h2 className="text-2xl mb-3">Signup</h2>
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
+      <div className="w-full max-w-md bg-white border shadow-md rounded-2xl p-8">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-600 to-violet-500 flex items-center justify-center text-white shadow">
+            <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M3 3v18h18" />
+              <path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M7 14l3-6 4 8 3-4" />
+            </svg>
+          </div>
 
-      {error && (
-        <div className="mb-2 p-3 bg-rose-100 text-rose-700 rounded text-sm">
-          {error}
+          <div>
+            <h1 className="text-lg font-semibold">Finance Tracker</h1>
+            <p className="text-xs text-slate-500">Create a new account</p>
+          </div>
         </div>
-      )}
 
-      <form onSubmit={submit} className="space-y-3">
-        <input
-          className="w-full p-2 border rounded"
-          placeholder="Username"
-          value={form.username}
-          onChange={e => setForm({ ...form, username: e.target.value })}
-        />
+        {error && <div className="mb-4 text-sm text-rose-600 bg-rose-50 p-3 rounded">{error}</div>}
 
-        <input
-          className="w-full p-2 border rounded"
-          placeholder="Email"
-          type="email"
-          value={form.email}
-          onChange={e => setForm({ ...form, email: e.target.value })}
-        />
+        <form onSubmit={submit} className="space-y-4">
+          <div>
+            <label className="text-xs font-medium text-slate-600 block mb-1">Username</label>
+            <input
+              className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-100"
+              placeholder="Your username"
+              value={form.username}
+              onChange={e => setForm({ ...form, username: e.target.value })}
+              required
+            />
+          </div>
 
-        <input
-          className="w-full p-2 border rounded"
-          placeholder="Password"
-          type="password"
-          value={form.password}
-          onChange={e => setForm({ ...form, password: e.target.value })}
-        />
+          <div>
+            <label className="text-xs font-medium text-slate-600 block mb-1">Email</label>
+            <input
+              className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-100"
+              placeholder="you@example.com"
+              type="email"
+              value={form.email}
+              onChange={e => setForm({ ...form, email: e.target.value })}
+              required
+            />
+          </div>
 
-        <button
-          disabled={loading}
-          className="w-full p-2 bg-green-600 text-white rounded disabled:opacity-60"
-        >
-          {loading ? 'Signing up...' : 'Signup'}
-        </button>
-      </form>
+          <div>
+            <label className="text-xs font-medium text-slate-600 block mb-1">Password</label>
+            <input
+              className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-100"
+              placeholder="••••••••"
+              type="password"
+              value={form.password}
+              onChange={e => setForm({ ...form, password: e.target.value })}
+              required
+            />
+          </div>
+
+          <button
+            disabled={loading}
+            className="w-full py-2 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-lg shadow disabled:opacity-50"
+            type="submit"
+          >
+            {loading ? 'Signing up...' : 'Create account'}
+          </button>
+        </form>
+
+        <p className="mt-6 text-center text-sm text-slate-600">
+          Already have an account?{' '}
+          <button
+            onClick={() => router.push('/login')}
+            className="text-indigo-600 hover:underline"
+            type="button"
+          >
+            Sign in
+          </button>
+        </p>
+      </div>
     </div>
   );
 }
