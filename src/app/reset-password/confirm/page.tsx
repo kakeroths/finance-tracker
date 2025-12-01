@@ -61,41 +61,19 @@ export default function ResetConfirmPage() {
         <form onSubmit={submit} className="space-y-4">
           <div>
             <label className="block text-xs font-medium text-slate-600 mb-1">New password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-100"
-              required
-              minLength={6}
-            />
+            <input type="password" value={password} onChange={e => setPassword(e.target.value)} className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-100" required minLength={6} />
           </div>
 
           <div>
             <label className="block text-xs font-medium text-slate-600 mb-1">Confirm password</label>
-            <input
-              type="password"
-              value={confirm}
-              onChange={e => setConfirm(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-100"
-              required
-            />
+            <input type="password" value={confirm} onChange={e => setConfirm(e.target.value)} className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-100" required />
           </div>
 
           <div className="flex gap-2">
-            <button
-              disabled={loading}
-              className="flex-1 py-2 rounded-lg bg-indigo-600 text-white"
-            >
+            <button disabled={loading} className="flex-1 py-2 rounded-lg bg-indigo-600 text-white">
               {loading ? 'Saving...' : 'Save new password'}
             </button>
-            <button
-              type="button"
-              onClick={() => router.push('/login')}
-              className="py-2 px-3 border rounded-lg"
-            >
-              Cancel
-            </button>
+            <button type="button" onClick={() => router.push('/login')} className="py-2 px-3 border rounded-lg">Cancel</button>
           </div>
         </form>
       </div>

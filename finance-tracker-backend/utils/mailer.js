@@ -19,6 +19,7 @@ async function getTransporter() {
     });
     return transporter;
   }
+  
 
   // Fallback: create Ethereal account (dev only)
   const testAccount = await nodemailer.createTestAccount();
@@ -33,6 +34,7 @@ async function getTransporter() {
   console.log('Ethereal test account created. Preview emails at:', testAccount.user);
   return transporter;
 }
+
 
 async function sendOTPEmail(to, subject, text) {
   const t = await getTransporter();
@@ -50,5 +52,30 @@ async function sendOTPEmail(to, subject, text) {
   }
   return info;
 }
+async function sendResetEmail(to, resetUrl) {
+  const t = await getTransporter();
 
-module.exports = { sendOTPEmail, getTransporter };
+  const subject = 'Reset your password';
+  const text = `Reset your password:\n\n${resetUrl}\n\nIf you did not request this, ignore this email.`;
+  const html = `
+    <p>Click <a href="${resetUrl}">here</a> to reset your password.</p>
+    <p>If you did not request this, you can safely ignore this email.</p>
+  `;
+
+  const info = await t.sendMail({
+    from: process.env.EMAIL_FROM || process.env.EMAIL_USER || 'no-reply@example.com',
+    to,
+    subject,
+    text,
+    html
+  });
+
+  if (nodemailer.getTestMessageUrl && info) {
+    const preview = nodemailer.getTestMessageUrl(info);
+    if (preview) console.log('Reset Email Preview URL:', preview);
+  }
+
+  return info;
+}
+
+module.exports = { sendOTPEmail, getTransporter ,sendResetEmail};
